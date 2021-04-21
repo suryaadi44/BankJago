@@ -1,7 +1,7 @@
 # BankJago
 Project Perbankan Sederhana via CLI
 
-
+```
  /$$$$$$$                      /$$          /$$$$$                              
 | $$__  $$                    | $$         |__  $$                              
 | $$  \ $$  /$$$$$$  /$$$$$$$ | $$   /$$      | $$  /$$$$$$   /$$$$$$   /$$$$$$ 
@@ -13,11 +13,12 @@ Project Perbankan Sederhana via CLI
                                                              /$$  \ $$          
                                                             |  $$$$$$/          
                                                              \______/           
-                              
+```
+
 Project ini dibuat untuk keperluan demo project semester 1 mata kuliah algoritma dan pemrograman
 
 
 Sebelum memulai program, buat folder di directory yang sama dengan nama 
-    "db_rek'
-    "db_user"
-    "rek_record"
+>    "db_rek'
+>    "db_user"
+>    "rek_record"
