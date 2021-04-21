@@ -19,6 +19,6 @@ Project ini dibuat untuk keperluan demo project semester 1 mata kuliah algoritma
 
 
 Sebelum memulai program, buat folder di directory yang sama dengan nama 
->    "db_rek'
->    "db_user"
->    "rek_record"
+>    "db_rek' 
+>    "db_user" 
+>    "rek_record" 
