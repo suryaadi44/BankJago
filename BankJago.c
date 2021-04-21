@@ -1,3 +1,11 @@
+/* ---------------------------------------------------------NOTE---------------------------------------------------------  */
+/* Jika saat syntax rename terjadi error, kemungkinan ada konfigurasi permission di windows yang menyebabkan hal tersebut  */
+/* Source code ini dibuat di MacOS, dan sudah di uji di Windows 10, namun masih ada kemungkinan akan adanya error tersebut */
+/*                                                                                                                         */
+/* Tambahan : Bagu pengguna Windows, akan terdat error untuk perintah system("clear"), dikarenakan pada windows, command   */
+/*            yang berlau adalah system("cls").                                                                            */
+/* ----------------------------------------------------------------------------------------------------------------------- */
+
 #include <stdio.h>
 #include <stdlib.h>   
 #include <string.h>
@@ -22,7 +30,7 @@ void landing();     //Logo
 void menu();        //Menu Utama
 void akunDefault(); //Akun Default 
 int login();        //Fungsi Login
-int Hbaris();       //Fungsi Menghitung Baris File
+int Hbaris();       //Fungsi Menghitung Baris Files
 
 //Fungsi Akun
 void menuAkun();
@@ -284,18 +292,8 @@ void eAkun(){
     fclose(fp);
     fclose(fpsementara);
     
-    if (rename(file, "backup.csv") != 0){
-         printf("\nGagal Membuat Backup");
-         printf("\nGagal Mengedit");
-    } else {
-        if (rename("fpsementara.txt", file) != 0) {
-            printf("\nGagal Mengedit");
-            rename("backup.csv", file);
-        } 
-        if (remove("backup.csv") != 0) {
-            printf("\nGagal Menghapus Backup");
-        } 
-    }
+    remove(file);
+    if (rename("fpsementara.txt", file) != 0) printf("\nGagal Mengedit");
 }
 
 void addAkun(){
@@ -367,19 +365,9 @@ void delAkun(){
         printf("Anda tidak memiliki ijin untuk mengakses menu ini");
     }
     fclose(fp);
-    
-    if (rename(file, "backup.csv") != 0){
-         printf("\nGagal Membuat Backup");
-         printf("\nGagal Menghapus");
-    } else {
-        if (rename("fpsementara.txt", file) != 0) {
-            printf("\nGagal Menghapus");
-            rename("backup.csv", file);
-        } 
-        if (remove("backup.csv") != 0) {
-            printf("\nGagal Menghapus Backup");
-        } 
-    }
+
+    remove(file);
+    if (rename("fpsementara.txt", file) != 0) printf("\nGagal Menghapus");
 }
 
 //Fungsi Pendukung Rekening
@@ -489,40 +477,46 @@ void riwayat(long norek, int jenis, long jumlahTx, long jumlahSaldo){
     
     if(baris == 0){
         fprintf(fp, "No,Waktu,Jenis Transaksi,Jumlah Transaksi,Saldo\n");
+        fclose(fp);
+        fp = fopen(file, "a");
+        baris = Hbaris(file);
     }
 
     if(barisLog == 0){
         fprintf(logall, "No,Waktu,No.Rekening,Jenis Transaksi,Jumlah Transaksi,Saldo\n");
+        fclose(logall);
+        logall = fopen(fileLog, "a");
+        barisLog = Hbaris(fileLog);
     }
 
     switch(jenis){
         case 1:
-            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,TARIK,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
-            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,TARIK,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
+            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,TARIK,%ld,%ld\n", baris, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
+            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,TARIK,%ld,%ld\n", barisLog, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
             break;
         case 2:
-            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,SETOR,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
-            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,SETOR,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
+            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,SETOR,%ld,%ld\n", baris, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
+            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,SETOR,%ld,%ld\n", barisLog, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
             break;
         case 3:
-            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,TRANSFER KELUAR,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
-            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,TRANSFER KELUAR,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
+            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,TRANSFER KELUAR,%ld,%ld\n", baris, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
+            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,TRANSFER KELUAR,%ld,%ld\n", barisLog, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
             break;
         case 4:
-            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,TRANSFER MASUK,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
-            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,TRANSFER MASUK,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
+            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,TRANSFER MASUK,%ld,%ld\n", baris, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
+            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,TRANSFER MASUK,%ld,%ld\n", barisLog, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
             break;
         case 5:
-            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,REKENING BARU,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
-            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,REKENING BARU,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
+            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,REKENING BARU,%ld,%ld\n", baris, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
+            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,REKENING BARU,%ld,%ld\n", barisLog, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
             break;
         case 6:
-            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,HAPUS REKENING,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
-            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,HAPUS REKENING,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
+            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,HAPUS REKENING,%ld,%ld\n", baris, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
+            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,HAPUS REKENING,%ld,%ld\n", barisLog, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
             break;
         deafult:
-            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,ERROR,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
-            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,ERROR,%ld,%ld\n", baris+1, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
+            fprintf(fp, "%d,%02d:%02d:%02d-%02d/%02d/%d,ERROR,%ld,%ld\n", baris, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, jumlahTx, jumlahSaldo);
+            fprintf(logall, "%d,%02d:%02d:%02d-%02d/%02d/%d,%ld,ERROR,%ld,%ld\n", barisLog, waktu->tm_hour, waktu->tm_min,waktu->tm_sec, waktu->tm_mday, waktu->tm_mon + 1, waktu->tm_year + 1900, norek, jumlahTx, jumlahSaldo);
             break;
     }
     fclose(fp);
@@ -594,19 +588,9 @@ void editRek(){
     }
     fclose(fp);
     fclose(fpsementara);
-    
-    if (rename(file, "backup.csv") != 0){
-         printf("\nGagal Membuat Backup");
-         printf("\nGagal Mengedit");
-    } else {
-        if (rename("fpsementara.txt", file) != 0) {
-            printf("\nGagal Mengedit");
-            rename("backup.csv", file);
-        } 
-        if (remove("backup.csv") != 0) {
-            printf("\nGagal Menghapus Backup");
-        } 
-    }
+
+    remove(file);
+    if (rename("fpsementara.csv", "data_rek.csv") != 0) printf("\nGagal Mengedit");
 }
 
 void hapusRek(){
@@ -638,18 +622,9 @@ void hapusRek(){
     }
     fclose(fp);
     fclose(fpsementara);
-    if (rename(file, "backup.csv") != 0){
-         printf("\nGagal Membuat Backup");
-         printf("\nGagal Mengedit");
-    } else {
-        if (rename("fpsementara.txt", file) != 0) {
-            printf("\nGagal Mengedit");
-            rename("backup.csv", file);
-        } 
-        if (remove("backup.csv") != 0) {
-            printf("\nGagal Menghapus Backup");
-        } 
-    }
+
+    remove(file);
+    if (rename("fpsementara.csv", file) != 0) printf("\nGagal Mengedit");
 }
 
 //Fungsi Transaksi antar Rekening
@@ -725,18 +700,10 @@ void tarik(){
     }
     fclose(fp);
     fclose(fpsementara);
-    if (rename(file, "backup.csv") != 0){
-         printf("\nGagal Membuat Backup");
-         printf("\nGagal Mengedit");
-    } else {
-        if (rename("fpsementara.txt", file) != 0) {
-            printf("\nGagal Mengedit");
-            rename("backup.csv", file);
-        } 
-        if (remove("backup.csv") != 0) {
-            printf("\nGagal Menghapus Backup");
-        } 
-    }
+
+    remove("data_rek.csv");
+    if (rename("fpsementara.csv", file) != 0) printf("\nGagal Melakukan Transaksi");
+    
     pauseRek();
 }
 
@@ -780,18 +747,8 @@ void setor(){
     fclose(fp);
     fclose(fpsementara);
 
-    if (rename(file, "backup.csv") != 0){
-         printf("\nGagal Membuat Backup");
-         printf("\nGagal Melakukan Transaksi");
-    } else {
-        if (rename("fpsementara.txt", file) != 0) {
-            printf("\nGagal Melakukan Transaksi");
-            rename("backup.csv", file);
-        } 
-        if (remove("backup.csv") != 0) {
-            printf("\nGagal Menghapus Backup");
-        } 
-    }
+    remove(file);
+    if (rename("fpsementara.csv", file) != 0) printf("\nGagal Melakukan Transaksi");
 
     pauseRek();
 }
@@ -880,21 +837,10 @@ void transfer(){
         fclose(fpsementara2);
         
         if(refund == 0){
-            
             remove("fpsementara.csv");
-            if (rename(file, "backup.csv") != 0){
-                printf("\nGagal Membuat Backup");
-                printf("\nGagal Melakukan Transaksi");
-            } else {
-                if (rename("fpsementara.txt", file) != 0) {
-                    printf("\nGagal Melakukan Transaksi");
-                    rename("backup.csv", file);
-                } 
-                if (remove("backup.csv") != 0) {
-                    printf("\nGagal Menghapus Backup");
-                    } 
-            }
-
+            
+            remove(file);
+            if (rename("fpsementara2.csv", file) != 0) printf("\nGagal Melakukan Transaksi");
         } else {
             fclose(fpsementara);
             remove("fpsementara.csv");
