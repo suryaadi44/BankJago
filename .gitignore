@@ -1,8 +1,10 @@
-/rek_record/
-/db_rek/
-/db_user/
+#/rek_record/
+#/db_rek/
+#/db_user/
 
-  
+#Local DB
+*.csv 
+
 # Prerequisites
 *.d
 
