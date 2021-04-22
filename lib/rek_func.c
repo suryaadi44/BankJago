@@ -1,16 +1,4 @@
-#include <stdlib.h>   
-#include <stdio.h>
-#include <string.h>
-#include <time.h> 
 #include "rek_func.h" 
-
-struct rek {
-    int id;
-    long norek;
-    char namaDepan[20];
-    char namaBelakang[20];
-    long isi;
-};
 
 void pauseRek() {
     char lanjut;
@@ -134,7 +122,10 @@ void buatRek() {
     FILE* fp;
     struct rek nasabah;
     char file[] = "./db_rek/data_rek.csv";
-
+    
+    clear();
+    landing();
+    
     fp = fopen(file, "a+");
 
     printf("\nMasukan Data untuk Rekening Baru ");
@@ -167,6 +158,8 @@ void editRek() {
     char namaDepanBaru[20];
     char namaBelakangBaru[20];
 
+    clear();
+    landing();
 
     printRek();
     printf("Pilih User Mana yang Ingin Diganti Dengan Mengetik User ID-nya: ");
@@ -203,6 +196,8 @@ void hapusRek() {
     fpsementara = fopen("./db_rek/fpsementara.csv", "a+");
     int baris = Hbaris(file);
 
+    clear();
+    landing();
 
     printRek();
 
