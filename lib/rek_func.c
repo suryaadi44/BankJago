@@ -28,21 +28,6 @@ void printRek() {
     fclose(fp);
 }
 
-int cekId(char file[]) {
-    int id = -1;
-    int baris = Hbaris(file);
-
-    scanf("%d", &id);
-
-    while (id > baris || id < 0) {
-        printf("\nID Tidak Ditemukan");
-        printf("\nSilakan Masukan ID Lagi :");
-        scanf("%d", &id);
-    }
-
-    return id;
-}
-
 void riwayat(long norek, int jenis, long jumlahTx, long jumlahSaldo) {
     FILE* fp, * logall;
 
@@ -125,7 +110,7 @@ void buatRek() {
     
     clear();
     landing();
-    
+
     fp = fopen(file, "a+");
 
     printf("\nMasukan Data untuk Rekening Baru ");

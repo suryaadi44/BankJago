@@ -2,28 +2,19 @@
 #include "lib/acc_func.h"
 #include "lib/mainLogic.h"
 #include "lib/login_func.h"    
-
-void menu(); 
-void menuAkun();
-void menuTransaksi();
+#include "lib/BankJago.h"   
 
 int main() {
     int cek;
-    //clear();
+    clear();
 
     akunDefault();
-
     landing();
 
-    if (session == -1) {
-        cek = login();
-    }
-
-    if (cek == 1 || session != -1) {
-        menu();
-    } else {
-        printf("Username atau Password Salah!\n");
-    }
+    if (session == -1) cek = login();
+    
+    if (cek == 1 || session != -1) menu();
+    else printf("Username atau Password Salah!\n");
 
     return 0;
 }
