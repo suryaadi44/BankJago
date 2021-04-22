@@ -2,7 +2,6 @@
 #define REK_FUNC_H_
 
 #include "mainLogic.h"
-#include "BankJago.h"  
 
 //Fungsi Rekening
 void buatRek();
@@ -16,7 +15,7 @@ void setor();
 void transfer();
 
 //Fungsi Pendukung Rekening
-void pauseRek();
+int pauseRek();
 void printRek();
 void riwayat();
 
