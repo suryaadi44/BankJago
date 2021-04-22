@@ -2,8 +2,11 @@
 #include "lib/acc_func.h"
 #include "lib/mainLogic.h"
 #include "lib/login_func.h"    
-#include "lib/BankJago.h" 
 #include "lib/directory.h" 
+
+void menu(); 
+void menuAkun();
+void menuTransaksi();
 
 int main() {
     int cek;
@@ -14,7 +17,7 @@ int main() {
     landing();
 
     if (session == -1) cek = login();
-    
+
     if (cek == 1 || session != -1) menu();
     else printf("Username atau Password Salah!\n");
 
@@ -124,15 +127,19 @@ void menuTransaksi() {
     switch (mpilih) {
     case 1:
         cekSaldo();
+        if (pauseRek()) menuTransaksi();
         break;
     case 2:
         tarik();
+        if (pauseRek()) menuTransaksi();
         break;
     case 3:
         setor();
+        if (pauseRek()) menuTransaksi();
         break;
     case 4:
         transfer();
+        if (pauseRek()) menuTransaksi();
         break;
     case 5:
         menu();

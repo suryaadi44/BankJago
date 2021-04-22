@@ -1,13 +1,12 @@
 #include "rek_func.h" 
 
-void pauseRek() {
+int pauseRek() {
     char lanjut;
     printf("\nApakah anda ingin melanjutkan? (y/t) :");
     scanf("\n");
     scanf("%c", &lanjut);
-    if (lanjut == 'y') {
-        menuTransaksi();
-    }
+    if (lanjut == 'y') return 1;
+    return 0;
 }
 
 void printRek() {
@@ -233,7 +232,6 @@ void cekSaldo() {
             else printf("Saldo    : %ld", nasabah.isi);
         }
     }
-    pauseRek();
 }
 
 void tarik() {
@@ -283,8 +281,6 @@ void tarik() {
 
     remove("./db_rek/data_rek.csv");
     if (rename("./db_rek/fpsementara.csv", file) != 0) printf("\nGagal Melakukan Transaksi");
-
-    pauseRek();
 }
 
 void setor() {
@@ -329,8 +325,6 @@ void setor() {
 
     remove(file);
     if (rename("./db_rek/fpsementara.csv", file) != 0) printf("\nGagal Melakukan Transaksi");
-
-    pauseRek();
 }
 
 void transfer() {
@@ -429,5 +423,4 @@ void transfer() {
     } else {
         remove("./db_rek/fpsementara.csv");
     }
-    pauseRek();
 }
