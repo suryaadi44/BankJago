@@ -2,12 +2,14 @@
 #include "lib/acc_func.h"
 #include "lib/mainLogic.h"
 #include "lib/login_func.h"    
-#include "lib/BankJago.h"   
+#include "lib/BankJago.h" 
+#include "lib/directory.h" 
 
 int main() {
     int cek;
     clear();
 
+    directoryCheck();
     akunDefault();
     landing();
 
