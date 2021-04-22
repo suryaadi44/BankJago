@@ -1,7 +1,8 @@
 #include "lib/rek_func.h"
 #include "lib/acc_func.h"
 #include "lib/mainLogic.h"
-#include "lib/login_func.h"     
+#include "lib/login_func.h"    
+#include "lib/directory.h" 
 
 void menu(); 
 void menuAkun();
@@ -11,6 +12,7 @@ int main() {
     int cek;
     clear();
 
+    directoryCheck();
     akunDefault();
     landing();
 
