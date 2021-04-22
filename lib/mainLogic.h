@@ -26,6 +26,7 @@ void landing();     //Logo
 void akunDefault(); //Akun Default 
 int Hbaris();       //Fungsi Menghitung Baris Files
 void clear();       //Define Command Clear terminal
+int cekId();
 
 extern int session;
 extern int sessionRank;

@@ -54,6 +54,21 @@ int Hbaris(char bacaBaris[]) {
     return i;
 }
 
+int cekId(char file[]) {
+    int id = -1;
+    int baris = Hbaris(file);
+
+    scanf("%d", &id);
+
+    while (id > baris || id < 0) {
+        printf("\nID Tidak Ditemukan");
+        printf("\nSilakan Masukan ID Lagi :");
+        scanf("%d", &id);
+    }
+
+    return id;
+}
+
 void clear() {
 #ifdef _WIN32
     std : system("cls");

@@ -9,7 +9,7 @@ void menuTransaksi();
 
 int main() {
     int cek;
-    clear();
+    //clear();
 
     akunDefault();
 
